@@ -134,19 +134,13 @@ jobs:
         run: pip3 install requests
       - name: 'Release: Build "conduit/wpilibio:nativezip" for macOS'
         if: github.event_name == 'release' && matrix.host.displayName == 'macOS'
-        run: bazelisk build //conduit/wpilibio/osxuniversal:nativezip
-        env:
-          GITHUB_ACTOR: camearle20
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bazelisk build --define "publishing_version=${{ steps.get_version.outputs.version-without-v }}" //conduit/wpilibio/osxuniversal:nativezip
       - name: 'Release: Upload "conduit/wpilibio:nativezip" for macOS'
         if: github.event_name == 'release' && matrix.host.displayName == 'macOS'
         run: python3 build_tools/repo/publish_zip.py --url https://maven.pkg.github.com/camearle20/AdvantageKit --group_id org.littletonrobotics.akit.conduit --artifact_id conduit-wpilibio --version ${{ steps.get_version.outputs.version-without-v }} --classifier ${{ matrix.host.classifier }} --file_path bazel-bin/conduit/wpilibio/osxuniversal/wpilibio-${{ steps.get_version.outputs.version-without-v }}-${{ matrix.host.classifier }}.zip --username camearle20 --access_token ${{ secrets.GITHUB_TOKEN }}
       - name: 'Release: Build "conduit/wpilibio:nativezip"'
         if: github.event_name == 'release' && matrix.host.displayName != 'macOS'
-        run: bazelisk build //conduit/wpilibio:nativezip
-        env:
-          GITHUB_ACTOR: camearle20
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bazelisk build --define "publishing_version=${{ steps.get_version.outputs.version-without-v }}" //conduit/wpilibio:nativezip
       - name: 'Release: Upload "conduit/wpilibio:nativezip"'
         if: github.event_name == 'release' && matrix.host.displayName != 'macOS'
         run: python3 build_tools/repo/publish_zip.py --url https://maven.pkg.github.com/camearle20/AdvantageKit --group_id org.littletonrobotics.akit.conduit --artifact_id conduit-wpilibio --version ${{ steps.get_version.outputs.version-without-v }} --classifier ${{ matrix.host.classifier }} --file_path bazel-bin/conduit/wpilibio/wpilibio-${{ steps.get_version.outputs.version-without-v }}-${{ matrix.host.classifier }}.zip --username camearle20 --access_token ${{ secrets.GITHUB_TOKEN }}
