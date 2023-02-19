@@ -14,8 +14,6 @@ parser.add_argument("--username", help="GitHub username")
 parser.add_argument("--access_token", help="GitHub personal access token")
 args = parser.parse_args()
 
-#https://maven.pkg.github.com/Mechanical-Advantage/AdvantageKit/org/littletonrobotics/akit/conduit/conduit-wpilibio/2.1.2/conduit-wpilibio-2.1.2-windowsx86-64.zip
-
 # GitHub Packages Maven URL
 url = f"{args.url}/{args.group_id.replace('.', '/')}/{args.artifact_id}/{args.version}/{args.artifact_id}-{args.version}-{args.classifier}.zip"
 
@@ -48,7 +46,7 @@ headers = {
 response_zip = requests.put(url, headers=headers, data=zip_data)
 
 # Check the status code of the response
-if response_zip.status_code == 201:
+if response_zip.status_code == 200 or response_zip.status_code == 201:
     print("Zip file published to GitHub Packages Maven.")
 else:
     print(f"Error: {response_zip.status_code} - {response_zip.content.decode()}")
@@ -57,7 +55,7 @@ else:
 response_sha256 = requests.put(f"{url}.sha256", headers=headers, data=sha256_content)
 
 # Check the status code of the response
-if response_sha256.status_code == 201:
+if response_sha256.status_code == 200 or response_sha256.status_code == 201:
     print("SHA-256 file published to GitHub Packages Maven.")
 else:
     print(f"Error: {response_sha256.status_code} - {response_sha256.content.decode()}")
@@ -66,7 +64,7 @@ else:
 response_md5 = requests.put(f"{url}.md5", headers=headers, data=md5_content)
 
 # Check the status code of the response
-if response_md5.status_code == 201:
+if response_md5.status_code == 200 or response_md5.status_code == 201:
     print("MD5 file published to GitHub Packages Maven.")
 else:
     print(f"Error: {response_md5.status_code} - {response_md5.content.decode()}")
