@@ -77,7 +77,7 @@ jobs:
         run: pip3 install requests
       - name: 'Release: Build "conduit/wpilibio:nativezip"'
         if: github.event_name == 'release'
-        run: bazelisk run --config=athena --define "publishing_version=${{ steps.get_version.outputs.version-without-v }}" //conduit/wpilibio:nativezip
+        run: bazelisk build --config=athena --define "publishing_version=${{ steps.get_version.outputs.version-without-v }}" //conduit/wpilibio:nativezip
       - name: 'Release: Upload "conduit/wpilibio:nativezip"'
         if: github.event_name == 'release'
         run: python3 build_tools/repo/publish_zip.py --url https://maven.pkg.github.com/camearle20/AdvantageKit --group_id org.littletonrobotics.akit.conduit --artifact_id conduit-wpilibio --version ${{ steps.get_version.outputs.version-without-v }} --classifier linuxathena --file_path bazel-bin/conduit/wpilibio/wpilibio-${{ steps.get_version.outputs.version-without-v }}-linuxathena.zip --username camearle20 --access_token ${{ secrets.GITHUB_TOKEN }}
